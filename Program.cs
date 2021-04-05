@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +15,8 @@ namespace YtManager
 {
     class Program
     {
+        private const string TitlePrefix = "-t";
+
         private string clientSecretFilePath = @"C:\Projects\YouTube\client_id.json";
 
         static void Main(string[] args)
@@ -22,7 +26,9 @@ namespace YtManager
 
             try
             {
-                new Program().Run().Wait();
+                args.ToList().ForEach(i => Console.WriteLine(i.ToString()));
+                Console.WriteLine(args[args.ToList().FindIndex(x => x == VideoPropertyPrefix.Title.ToDescriptionString()) + 1]);
+                //new Program().Run().Wait();
             }
             catch (AggregateException ex)
             {
@@ -36,7 +42,7 @@ namespace YtManager
             Console.ReadKey();
         }
 
-        private async Task Run()
+        private async Task Run(string[] args)
         {
             UserCredential credential;
             using (var stream = new FileStream(this.clientSecretFilePath, FileMode.Open, FileAccess.Read))
@@ -58,14 +64,8 @@ namespace YtManager
                 ApplicationName = Assembly.GetExecutingAssembly().GetName().Name
             });
 
-            var video = new Video();
-            video.Snippet = new VideoSnippet();
-            video.Snippet.Title = "YTManagerTestTitle";
-            video.Snippet.Description = "YTManagerTest Desc";
-            video.Snippet.Tags = new string[] { "tag1", "tag2" };
-            video.Snippet.CategoryId = "22"; // See https://developers.google.com/youtube/v3/docs/videoCategories/list
-            video.Status = new VideoStatus();
-            video.Status.PrivacyStatus = "public"; // or "private" or "public"
+            var video = this.GetYtVideoObject(args);
+
             string filePath = @"C:\Projects\YouTube\sample1.mp4"; // Replace with path two actual movie file.
 
             using (var fileStream = new FileStream(filePath, FileMode.Open))
@@ -78,7 +78,7 @@ namespace YtManager
             }
         }
 
-        void videosInsertRequest_ProgressChanged(Google.Apis.Upload.IUploadProgress progress)
+        private void videosInsertRequest_ProgressChanged(Google.Apis.Upload.IUploadProgress progress)
         {
             switch (progress.Status)
             {
@@ -92,9 +92,34 @@ namespace YtManager
             }
         }
 
-        void videosInsertRequest_ResponseReceived(Video video)
+        private void videosInsertRequest_ResponseReceived(Video video)
         {
             Console.WriteLine("Video id '{0}' was successfully uploaded.", video.Id);
+        }
+
+        private Video GetYtVideoObject(string[] args)
+        {
+            Video video = new Video();
+            video.Snippet = new VideoSnippet();
+            video.Snippet.Title = "YTManagerTestTitle";
+            video.Snippet.Description = "YTManagerTest Desc";
+            video.Snippet.Tags = new string[] { "tag1", "tag2" };
+            video.Snippet.CategoryId = "22"; // See https://developers.google.com/youtube/v3/docs/videoCategories/list
+            video.Status = new VideoStatus();
+            video.Status.PrivacyStatus = "public"; // or "private" or "public"
+            return video;
+        }
+    }
+
+    public static class MyEnumExtensions
+    {
+        public static string ToDescriptionString(this VideoPropertyPrefix val)
+        {
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])val
+               .GetType()
+               .GetField(val.ToString())
+               .GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
     }
 }
