@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "dxPZG2G9r7eJmI2fGWI8LM/6wRFcvLprB0XwzzxCoILzooh2GgF3BkjIyGdk6ZIGoF8O+q1UXjSbwHYZvGkNAQ==",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\YtManager\\YtManager.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dharmara\\.nuget\\packages\\google.apis\\1.51.0\\google.apis.1.51.0.nupkg.sha512",
+    "C:\\Users\\dharmara\\.nuget\\packages\\google.apis.auth\\1.51.0\\google.apis.auth.1.51.0.nupkg.sha512",
+    "C:\\Users\\dharmara\\.nuget\\packages\\google.apis.core\\1.51.0\\google.apis.core.1.51.0.nupkg.sha512",
+    "C:\\Users\\dharmara\\.nuget\\packages\\google.apis.youtube.v3\\1.51.0.2238\\google.apis.youtube.v3.1.51.0.2238.nupkg.sha512",
+    "C:\\Users\\dharmara\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
